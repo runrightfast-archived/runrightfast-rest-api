@@ -19,6 +19,23 @@ var expect = require('chai').expect;
 var lodash = require('lodash');
 
 describe('RestApiModel', function() {
+
+	it('testing lodash.chain',function(){
+
+		var obj = {
+			a1: {a:1},
+			a2: {a:2}
+		};
+		lodash.chain(obj)
+			.keys()
+			.forEach(function(key){
+				console.log(key + ' -> ' + JSON.stringify(obj[key]));
+			});
+
+	});
 	
+	describe('Resource',function(){
+
+	});
 
 });
