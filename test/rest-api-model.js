@@ -170,8 +170,8 @@ describe('RestApiModel', function() {
 			var resource = new RestApiModel.Resource(settings);
 			console.log(JSON.stringify(resource,undefined,2));
 
-			expect(resource.action('create').name).to.equal('create');
-			expect(resource.action('delete').name).to.equal('delete');
+			expect(resource.actions.create.name).to.equal('create');
+			expect(resource.actions.delete.name).to.equal('delete');
 		});
 
 		it('can be constructed with links',function(){
@@ -218,9 +218,9 @@ describe('RestApiModel', function() {
 			var resource = new RestApiModel.Resource(settings);
 			console.log(JSON.stringify(resource,undefined,2));
 
-			expect(resource.action('create').name).to.equal('create');
-			expect(resource.action('delete').name).to.equal('delete');
-			expect(resource.link('config').rel).to.equal('config');			
+			expect(resource.actions.create.name).to.equal('create');
+			expect(resource.actions.delete.name).to.equal('delete');
+			expect(resource.links.config.rel).to.equal('config');			
 		});
 
 		it('#addAction',function(){
@@ -259,8 +259,8 @@ describe('RestApiModel', function() {
 			var resource = new RestApiModel.Resource(settings);
 			console.log(JSON.stringify(resource,undefined,2));
 
-			expect(resource.action('create').name).to.equal('create');
-			expect(resource.action('delete').name).to.equal('delete');
+			expect(resource.actions.create.name).to.equal('create');
+			expect(resource.actions.delete.name).to.equal('delete');
 
 			resource.addAction({
 				name : 'update',
@@ -269,7 +269,7 @@ describe('RestApiModel', function() {
 				payloadSchema : resourceSchema
 			});
 
-			expect(resource.action('update').name).to.equal('update');
+			expect(resource.actions.update.name).to.equal('update');
 		});
 
 		it('#addAction - does not allow adding an action that already exists',function(done){
@@ -308,8 +308,8 @@ describe('RestApiModel', function() {
 			var resource = new RestApiModel.Resource(settings);
 			console.log(JSON.stringify(resource,undefined,2));
 
-			expect(resource.action('create').name).to.equal('create');
-			expect(resource.action('delete').name).to.equal('delete');
+			expect(resource.actions.create.name).to.equal('create');
+			expect(resource.actions.delete.name).to.equal('delete');
 
 			resource.addAction({
 				name : 'update',
@@ -318,7 +318,7 @@ describe('RestApiModel', function() {
 				payloadSchema : resourceSchema
 			});
 
-			expect(resource.action('update').name).to.equal('update');
+			expect(resource.actions.update.name).to.equal('update');
 
 			try{
 				resource.addAction({
@@ -371,12 +371,12 @@ describe('RestApiModel', function() {
 			var resource = new RestApiModel.Resource(settings);
 			console.log(JSON.stringify(resource,undefined,2));
 
-			expect(resource.action('create').name).to.equal('create');
-			expect(resource.action('delete').name).to.equal('delete');
+			expect(resource.actions.create.name).to.equal('create');
+			expect(resource.actions.delete.name).to.equal('delete');
 
 			resource.removeAction('delete');
 
-			expect(resource.action('delete')).to.equal(undefined);
+			expect(resource.actions.delete).to.equal(undefined);
 		});
 
 		it('#setAction',function(){
@@ -415,8 +415,8 @@ describe('RestApiModel', function() {
 			var resource = new RestApiModel.Resource(settings);
 			console.log(JSON.stringify(resource,undefined,2));
 
-			expect(resource.action('create').name).to.equal('create');
-			expect(resource.action('delete').name).to.equal('delete');
+			expect(resource.actions.create.name).to.equal('create');
+			expect(resource.actions.delete.name).to.equal('delete');
 
 			resource.setAction({
 				name : 'update',
@@ -426,7 +426,7 @@ describe('RestApiModel', function() {
 				auth : ['hawk']
 			});
 
-			expect(resource.action('update').auth[0]).to.equal('hawk');
+			expect(resource.actions.update.auth[0]).to.equal('hawk');
 		});
 
 		it('#addLink',function(){
@@ -473,9 +473,9 @@ describe('RestApiModel', function() {
 			var resource = new RestApiModel.Resource(settings);
 			console.log(JSON.stringify(resource,undefined,2));
 
-			expect(resource.action('create').name).to.equal('create');
-			expect(resource.action('delete').name).to.equal('delete');
-			expect(resource.link('config').rel).to.equal('config');	
+			expect(resource.actions.create.name).to.equal('create');
+			expect(resource.actions.delete.name).to.equal('delete');
+			expect(resource.links.config.rel).to.equal('config');	
 
 			resource.addLink({
 				href : 'http://api.runrightfast.co/data/v1/object-schema-manager/objectSchemaNamespaces',
@@ -484,7 +484,7 @@ describe('RestApiModel', function() {
 				auth: ['hawk'],				
 			});
 
-			expect(resource.link('namespaces').rel).to.equal('namespaces');	
+			expect(resource.links.namespaces.rel).to.equal('namespaces');	
 		});
 
 		it('#addLink - adding a link with the same rel is not allowed',function(done){
@@ -511,7 +511,7 @@ describe('RestApiModel', function() {
 			var resource = new RestApiModel.Resource(settings);
 			console.log(JSON.stringify(resource,undefined,2));
 
-			expect(resource.link('config').rel).to.equal('config');	
+			expect(resource.links.config.rel).to.equal('config');	
 
 			resource.addLink({
 				href : 'http://api.runrightfast.co/data/v1/object-schema-manager/objectSchemaNamespaces',
@@ -520,7 +520,7 @@ describe('RestApiModel', function() {
 				auth: ['hawk'],				
 			});
 
-			expect(resource.link('namespaces').rel).to.equal('namespaces');	
+			expect(resource.links.namespaces.rel).to.equal('namespaces');	
 
 			try{
 				resource.addLink({
@@ -560,9 +560,9 @@ describe('RestApiModel', function() {
 			var resource = new RestApiModel.Resource(settings);
 			console.log(JSON.stringify(resource,undefined,2));
 
-			expect(resource.link('config').rel).to.equal('config');	
+			expect(resource.links.config.rel).to.equal('config');	
 			resource.removeLink('config');
-			expect(resource.link('config')).to.equal(undefined);	
+			expect(resource.links.config).to.equal(undefined);	
 		});
 
 		it('#setLink',function(){
@@ -589,7 +589,7 @@ describe('RestApiModel', function() {
 			var resource = new RestApiModel.Resource(settings);
 			console.log(JSON.stringify(resource,undefined,2));
 
-			expect(resource.link('config').rel).to.equal('config');	
+			expect(resource.links.config.rel).to.equal('config');	
 			resource.setLink({
 				href : 'http://api.runrightfast.co/data/v1/object-schema-manager/config',
 				title : 'Object Schema Manager Configuration',
@@ -597,7 +597,7 @@ describe('RestApiModel', function() {
 				auth: ['hawk','oath'],				
 			});
 			console.log('after setLink(): ' + JSON.stringify(resource,undefined,2));
-			expect(resource.link('config').auth[1]).to.equal('oath');	
+			expect(resource.links.config.auth[1]).to.equal('oath');	
 		});
 
 		it('#path',function(done){
@@ -636,8 +636,8 @@ describe('RestApiModel', function() {
 			var resource = new RestApiModel.Resource(settings);
 			console.log(JSON.stringify(resource,undefined,2));
 
-			expect(resource.action('create').name).to.equal('create');
-			expect(resource.action('delete').name).to.equal('delete');
+			expect(resource.actions.create.name).to.equal('create');
+			expect(resource.actions.delete.name).to.equal('delete');
 
 			expect(resource.path('data','create')).to.equal('/data/v1/applications');
 			expect(resource.path('data','delete')).to.equal('/data/v1/applications/{id}');
