@@ -741,9 +741,9 @@ describe('RestApiModel', function() {
 						actions :[
 							{
 								name : 'create',
-								 title : 'Create',
-								 method : 'POST',
-								 payloadSchema : resourceSchema
+								title : 'Create',
+								method : 'POST',
+								payloadSchema : resourceSchema
 							},
 							{
 								name : 'delete',
@@ -764,13 +764,15 @@ describe('RestApiModel', function() {
 				]
 			};
 
-			var domain = new RestApiModel.Domain(settings);			
+			var domain = new RestApiModel.Domain(settings);	
+			console.log('domain = ' + JSON.stringify(domain,undefined,2));		
 			var dataHref = domain.resourceHref({
 				name : 'applications',
 				version : 1,
 				hrefType : 'data'
 			});
 			console.log('data href = ' + dataHref);
+			expect(dataHref).to.equal('http://api.runrightfast.co/data/v1/applications');
 		});
 
 		it('#resourceHref - validates its args',function(done){
@@ -839,6 +841,202 @@ describe('RestApiModel', function() {
 				}
 				
 			}
+		});
+
+		it('#resourceDataHref, #resourceSchemaHref',function(){
+			var resourceSchema = {
+			 	namespace : 'ns://runrightfast.co/config',
+			 	version : '1.1.1',
+			 	type : 'ObjectSchemaManagerConfig'
+			};
+
+			var settings = {
+				name : 'api.runrightfast.co',
+				https : true,
+				resources : [
+					{
+						name : 'applications',
+						version : 1,
+						objectSchemaType: {
+							namespace : 'ns://runrightfast.co/applications',
+							version : '1.0.0',
+							type : 'Application'
+						},
+						description : 'Applications',
+						tags : ['app'],
+						actions :[
+							{
+								name : 'create',
+								 title : 'Create',
+								 method : 'POST',
+								 payloadSchema : resourceSchema
+							},
+							{
+								name : 'delete',
+							 	title : 'Delete',
+							 	method : 'DELETE',
+							 	path : '/{id}'
+							 }
+						],
+						links: [
+							{
+								href : 'http://api.runrightfast.co/data/v1/object-schema-manager/config',
+								title : 'Object Schema Manager Configuration',
+								rel : 'config',
+								auth: ['hawk'],				
+							}
+						]
+					}
+				]
+			};
+
+			var domain = new RestApiModel.Domain(settings);	
+			var href = domain.resourceDataHref({name:'applications',version:1});
+			expect(href).to.equal('https://api.runrightfast.co/data/v1/applications');
+
+			href = domain.resourceSchemaHref({name:'applications',version:1});
+			expect(href).to.equal('https://api.runrightfast.co/schema/v1/applications');
+			
+		});
+
+		it('#resourceLinkHref',function(){
+			var resourceSchema = {
+			 	namespace : 'ns://runrightfast.co/config',
+			 	version : '1.1.1',
+			 	type : 'ObjectSchemaManagerConfig'
+			};
+
+			var settings = {
+				name : 'api.runrightfast.co',
+				resources : [
+					{
+						name : 'applications',
+						version : 1,
+						objectSchemaType: {
+							namespace : 'ns://runrightfast.co/applications',
+							version : '1.0.0',
+							type : 'Application'
+						},
+						description : 'Applications',
+						tags : ['app'],
+						actions :[
+							{
+								name : 'create',
+								 title : 'Create',
+								 method : 'POST',
+								 payloadSchema : resourceSchema
+							},
+							{
+								name : 'delete',
+							 	title : 'Delete',
+							 	method : 'DELETE',
+							 	path : '/{id}'
+							 }
+						],
+						links: [
+							{
+								href : 'http://api.runrightfast.co/data/v1/object-schema-manager/config',
+								title : 'Object Schema Manager Configuration',
+								rel : 'config',
+								auth: ['hawk'],				
+							}
+						]
+					}
+				]
+			};
+
+			var domain = new RestApiModel.Domain(settings);			
+			var href = domain.resourceLinkHref({
+				name : 'applications',
+				version : 1,
+				linkPath : '{id}',
+				queryString : {version: true},
+				pathVariables : {id : '123'}
+			});
+			console.log('link href = ' + href);
+			expect(href).to.equal('http://api.runrightfast.co/data/v1/applications/123?version=true');
+
+			href = domain.resourceLinkHref({
+				name : 'applications',
+				version : 1,
+				linkPath : '2',
+				queryString : {version: false}
+			});
+			console.log('link href = ' + href);
+			expect(href).to.equal('http://api.runrightfast.co/data/v1/applications/2?version=false');
+		});
+
+		it('#resourceLinkHref - validates its args',function(done){
+			var resourceSchema = {
+			 	namespace : 'ns://runrightfast.co/config',
+			 	version : '1.1.1',
+			 	type : 'ObjectSchemaManagerConfig'
+			};
+
+			var settings = {
+				name : 'api.runrightfast.co',
+				resources : [
+					{
+						name : 'applications',
+						version : 1,
+						objectSchemaType: {
+							namespace : 'ns://runrightfast.co/applications',
+							version : '1.0.0',
+							type : 'Application'
+						},
+						description : 'Applications',
+						tags : ['app'],
+						actions :[
+							{
+								name : 'create',
+								 title : 'Create',
+								 method : 'POST',
+								 payloadSchema : resourceSchema
+							},
+							{
+								name : 'delete',
+							 	title : 'Delete',
+							 	method : 'DELETE',
+							 	path : '/{id}'
+							 }
+						],
+						links: [
+							{
+								href : 'http://api.runrightfast.co/data/v1/object-schema-manager/config',
+								title : 'Object Schema Manager Configuration',
+								rel : 'config',
+								auth: ['hawk'],				
+							}
+						]
+					}
+				]
+			};
+
+			var domain = new RestApiModel.Domain(settings);		
+			console.log('domain : ' + JSON.stringify(domain,undefined,2));
+			var href;
+			try{
+				href = domain.resourceLinkHref({
+					name : 'applicationsXXX',
+					version : 1,
+					linkPath : '{id}',
+					queryString : {version: true},
+					pathVariables : {id : '123'}
+				});
+				console.log('link href = ' + href);
+				done(new Error('expected Error'));
+			}catch(err){
+				console.log(err);
+				try{
+					href = domain.resourceLinkHref({});
+					console.log('link href = ' + href);
+					done(new Error('expected Error'));
+				}catch(err2){
+					console.log(err2);
+					done();
+				}
+			}
+
 		});
 	});
 
